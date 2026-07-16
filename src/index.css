@@ -1,0 +1,29 @@
+:root {
+  --btn-gap: 8px;
+  --border-color: #ccc;
+  --active-bg: #f0f0f0;
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --size-radius-2: 4px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.app-title {
+  margin-top: 0;
+  text-align: center;
+}

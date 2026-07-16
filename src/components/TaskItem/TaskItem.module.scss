@@ -1,0 +1,46 @@
+.TaskItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  user-select: none;
+}
+
+.Checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+}
+
+.Text {
+  flex: 1;
+}
+
+.Completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.DeleteButton {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  color: #d9534f;
+
+  &:hover {
+    background-color: #ffe6e6;
+  }
+}

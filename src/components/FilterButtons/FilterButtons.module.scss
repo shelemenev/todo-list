@@ -1,0 +1,22 @@
+.FilterButtons {
+  margin-bottom: 16px;
+}
+
+.Button {
+  padding: 6px 12px;
+  margin-right: var(--btn-gap);
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    border-color: #999;
+  }
+}
+
+.Active {
+  background-color: var(--active-bg);
+  font-weight: bold;
+}

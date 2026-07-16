@@ -1,0 +1,28 @@
+.TaskForm {
+  display: flex;
+  gap: var(--btn-gap);
+  margin-bottom: 16px;
+}
+
+.Input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.SubmitButton {
+  padding: 8px 16px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: var(--primary-hover);
+  }
+}
