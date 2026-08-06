@@ -7,9 +7,10 @@ export interface Task {
 }
 
 export interface TaskListProps {
-  tasks: Task[];
+  tasks: Task[]
   onToggle: (id: string) => void
   onDelete: (id: string) => void
+  onEdit?: (id: string, newText: string) => void 
 }
 
 export interface TaskItemProps {
@@ -18,9 +19,14 @@ export interface TaskItemProps {
   completed: boolean
   onToggle: (id: string) => void
   onDelete: (id: string) => void
+  onEdit?: (id: string, newText: string) => void
 }
 
 export interface FilterButtonsProps {
-  status: TaskStatus;
+  status: TaskStatus
   onStatusChange: (status: TaskStatus) => void
+}
+
+export interface TaskFormProps {
+  onAddTask: (task: Task) => void
 }

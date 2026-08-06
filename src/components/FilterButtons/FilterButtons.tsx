@@ -1,17 +1,17 @@
 import React from 'react'
 import styles from './FilterButtons.module.scss'
-import type { FilterButtonsProps } from '../../types'
+import type { FilterButtonsProps, TaskStatus } from '../../types'
+
+const FILTER_BUTTONS: ReadonlyArray<{ key: TaskStatus; label: string }> = [
+  { key: 'all', label: 'Все' },
+  { key: 'active', label: 'Активные' },
+  { key: 'completed', label: 'Выполненные' },
+] as const
 
 export const FilterButtons: React.FC<FilterButtonsProps> = ({ status, onStatusChange }) => {
-  const buttons = [
-    { key: 'all' as const, label: 'Все' },
-    { key: 'active' as const, label: 'Активные' },
-    { key: 'completed' as const, label: 'Выполненные' },
-  ];
-
   return (
     <div className={styles.FilterButtons}>
-      {buttons.map((btn) => (
+      {FILTER_BUTTONS.map((btn) => (
         <button
           key={btn.key}
           className={`${styles.Button} ${status === btn.key ? styles.Active : ''}`}

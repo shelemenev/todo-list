@@ -3,10 +3,9 @@ import { TaskItem } from '../TaskItem/TaskItem'
 import styles from './TaskList.module.scss'
 import type { TaskListProps } from '../../types'
 
-
-export const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete }) => {
+export const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onEdit }) => {
   if (tasks.length === 0) {
-    return <p className={styles.TaskItem}>Список задач пуст</p>
+    return <p className={styles.EmptyList}>Список задач пуст</p>
   }
 
   return (
@@ -19,6 +18,7 @@ export const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete })
           completed={task.completed}
           onToggle={onToggle}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       ))}
     </ul>

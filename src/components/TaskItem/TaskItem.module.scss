@@ -3,7 +3,26 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  gap: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.Completed {
+    background-color: #f9f9f9;
+    color: #888;
+
+    .Text {
+      text-decoration: line-through;
+    }
+
+    .ActionButtons,
+    .EditButton {
+      display: none;
+    }
+  }
 }
 
 .Label {
@@ -12,31 +31,106 @@
   gap: 8px;
   flex: 1;
   user-select: none;
+  min-width: 0; 
 }
 
 .Checkbox {
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: var(--primary);
+  accent-color: var(--primary, #3b82f6);
   -webkit-appearance: checkbox;
   appearance: checkbox;
 }
 
 .Text {
   flex: 1;
+  font-size: 16px;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.Completed {
-  text-decoration: line-through;
-  color: #888;
+.EditInput {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid var(--border-color, #d1d5db);
+  border-radius: var(--size-radius-2, 6px);
+  background-color: #fff;
+  color: #111;
+  outline: 2px solid var(--primary, #3b82f6);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #9ca3af;
+  }
+
+  &:focus {
+    border-color: var(--primary, #3b82f6);
+    outline: none;
+  }
+}
+
+.ActionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.EditButton {
+  padding: 4px 8px;
+  font-size: 13px;
+  background: transparent;
+  border: 1px solid var(--border-color, #ccc);
+  color: #333;
+  border-radius: var(--size-radius-2, 4px);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+    color: #000;
+  }
+}
+
+.SaveButton,
+.CancelButton {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: var(--size-radius-2, 4px);
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.SaveButton {
+  background-color: #10b981; 
+  color: white;
+
+  &:hover {
+    background-color: #059669;
+  }
+}
+
+.CancelButton {
+  background-color: #6b7280;
+  color: white;
+
+  &:hover {
+    background-color: #4b5563;
+  }
 }
 
 .DeleteButton {
   padding: 4px 8px;
   background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: var(--size-radius-2);
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--size-radius-2, 6px);
   cursor: pointer;
   color: #d9534f;
 

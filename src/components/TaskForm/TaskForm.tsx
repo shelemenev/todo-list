@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import styles from './TaskForm.module.scss'
-import type { Task } from '../../types'
-
-interface TaskFormProps {
-  onAddTask: (task: Task) => void
-}
+import type { Task, TaskFormProps } from '../../types'
 
 export const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
   const [text, setText] = useState('')
@@ -17,7 +13,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
       id: crypto.randomUUID(),
       text,
       completed: false,
-    };
+    }
 
     onAddTask(newTask)
     setText('')
