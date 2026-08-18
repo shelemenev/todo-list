@@ -59,7 +59,7 @@ export const TaskItem = ({
           aria-checked={completed}
           role="checkbox"
           tabIndex={0}
-          data-testid="task-checkbox" // ← ДОБАВЛЕНО: нужно для теста фильтрации и переключения статуса
+          data-testid="task-checkbox" 
           onChange={handleToggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -117,7 +117,7 @@ export const TaskItem = ({
                 setIsEditing(true);
               }}
               aria-label="Редактировать"
-              data-testid="edit-btn" // ← ДОБАВЛЕНО: нужно для тестов редактирования
+              data-testid="edit-btn" 
             >
               Редактировать
             </button>
@@ -130,7 +130,7 @@ export const TaskItem = ({
         type="button"
         onClick={handleDelete}
         aria-label="Удалить задачу"
-        data-testid="delete-btn" // ← ДОБАВЛЕНО: нужно для теста удаления
+        data-testid="delete-btn" 
       >
         Удалить
       </button>
