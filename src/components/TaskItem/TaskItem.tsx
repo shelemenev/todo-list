@@ -1,47 +1,52 @@
-import React, { useState } from 'react'
-import styles from './TaskItem.module.scss'
-import type { TaskItemProps } from '../../types'
+import React, { useState, useCallback } from 'react';
+import styles from './TaskItem.module.scss';
+import type { TaskItemProps } from '../../types';
 
-export const TaskItem: React.FC<TaskItemProps> = ({
+export const TaskItem = ({
   id,
   text,
   completed,
   onToggle,
   onDelete,
   onEdit,
-}) => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [inputValue, setInputValue] = useState(text)
+}: TaskItemProps): React.ReactElement => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputValue, setInputValue] = useState(text);
 
-  const handleToggle = () => onToggle(id)
-  const handleDelete = () => onDelete(id)
+  const handleToggle = useCallback(() => onToggle(id), [onToggle, id]);
+  const handleDelete = useCallback(() => onDelete(id), [onDelete, id]);
 
-  const handleSave = () => {
-    if (!inputValue.trim()) {
-      setInputValue(text)
-      setIsEditing(false)
-      return
+  const handleSave = useCallback(() => {
+    const trimmed = inputValue.trim();
+    if (!trimmed) {
+      setInputValue(text);
+      setIsEditing(false);
+      return;
     }
-    onEdit?.(id, inputValue.trim())
-    setTimeout(() => setIsEditing(false), 0)
-  }
 
-  const handleCancel = () => {
-    setInputValue(text)
-    setIsEditing(false)
-  }
+    onEdit?.(id, trimmed);
+    setIsEditing(false);
+  }, [inputValue, text, onEdit, id]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleSave()
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      handleCancel()
-    }
-  }
+  const handleCancel = useCallback(() => {
+    setInputValue(text);
+    setIsEditing(false);
+  }, [text]);
 
-  const canEdit = !completed && typeof onEdit === 'function'
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSave();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        handleCancel();
+      }
+    },
+    [handleSave, handleCancel],
+  );
+
+  const canEdit = !completed && typeof onEdit === 'function';
 
   return (
     <li className={`${styles.TaskItem} ${completed ? styles.Completed : ''}`}>
@@ -54,18 +59,19 @@ export const TaskItem: React.FC<TaskItemProps> = ({
           aria-checked={completed}
           role="checkbox"
           tabIndex={0}
-          onChange={handleToggle} 
+          data-testid="task-checkbox" // ← ДОБАВЛЕНО: нужно для теста фильтрации и переключения статуса
+          onChange={handleToggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              handleToggle()
+              e.preventDefault();
+              handleToggle();
             }
           }}
         />
-        
+
         {canEdit && isEditing ? (
           <input
-            data-testid="edit-input" 
+            data-testid="edit-input"
             className={styles.EditInput}
             type="text"
             value={inputValue}
@@ -88,6 +94,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
                 type="button"
                 onClick={handleSave}
                 aria-label="Сохранить"
+                data-testid="save-btn"
               >
                 Сохранить
               </button>
@@ -96,6 +103,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({
                 type="button"
                 onClick={handleCancel}
                 aria-label="Отмена"
+                data-testid="cancel-btn"
               >
                 Отмена
               </button>
@@ -105,10 +113,11 @@ export const TaskItem: React.FC<TaskItemProps> = ({
               className={styles.EditButton}
               type="button"
               onClick={() => {
-                setInputValue(text)
-                setIsEditing(true)
+                setInputValue(text);
+                setIsEditing(true);
               }}
               aria-label="Редактировать"
+              data-testid="edit-btn" // ← ДОБАВЛЕНО: нужно для тестов редактирования
             >
               Редактировать
             </button>
@@ -121,9 +130,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({
         type="button"
         onClick={handleDelete}
         aria-label="Удалить задачу"
+        data-testid="delete-btn" // ← ДОБАВЛЕНО: нужно для теста удаления
       >
         Удалить
       </button>
     </li>
-  )
-}
+  );
+};

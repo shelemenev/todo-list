@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import styles from './TaskForm.module.scss'
 import type { Task, TaskFormProps } from '../../types'
 
-export const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
+export const TaskForm = ({
+  onAddTask,
+}: TaskFormProps): React.ReactElement => {
   const [text, setText] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {

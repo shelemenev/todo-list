@@ -1,12 +1,41 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import type { Task, TaskStatus } from './types'
 import { TaskForm } from './components/TaskForm/TaskForm'
 import { TaskList } from './components/TaskList/TaskList'
 import { FilterButtons } from './components/FilterButtons/FilterButtons'
 
-export const App: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [status, setStatus] = useState<TaskStatus>('all')
+const TASKS_KEY = 'todo-tasks'
+const FILTER_KEY = 'todo-filter'
+
+export const App = (): React.ReactElement => {
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const stored = localStorage.getItem(TASKS_KEY)
+    if (!stored) return []
+    try {
+      const parsed = JSON.parse(stored) as Task[]
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
+  })
+
+  const [status, setStatus] = useState<TaskStatus>(() => {
+    const stored = localStorage.getItem(FILTER_KEY)
+    if (!stored) return 'all'
+    const parsed = stored as TaskStatus
+    if (['all', 'active', 'completed'].includes(parsed)) {
+      return parsed
+    }
+    return 'all'
+  })
+
+  useEffect(() => {
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks))
+  }, [tasks])
+
+  useEffect(() => {
+    localStorage.setItem(FILTER_KEY, status)
+  }, [status])
 
   const addTask = useCallback((newTask: Task) => {
     setTasks((prev) => [newTask, ...prev])
@@ -33,7 +62,7 @@ export const App: React.FC = () => {
     )
   }, [])
 
-  const filteredTasks = useMemo(() => {
+  const filteredTasks = useMemo<Task[]>(() => {
     if (status === 'all') return tasks
     if (status === 'active') return tasks.filter((t) => !t.completed)
     return tasks.filter((t) => t.completed)

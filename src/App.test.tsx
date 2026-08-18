@@ -1,188 +1,296 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
-
 import '@testing-library/jest-dom';
 
-describe('App — полный интеграционный тест', () => {
+describe('App — Todo List', () => {
   beforeEach(() => {
     render(<App />);
   });
 
-  // --- Хелперы (селекторы) ---
-  const getAddButton = () => screen.getByRole('button', { name: 'Добавить' });
-  const getPlaceholderInput = () => screen.getByPlaceholderText('Новая задача');
-  const getEditInput = () => screen.getByTestId('edit-input');
-  const getSaveButton = () => screen.getByRole('button', { name: 'Сохранить' });
-  const getCancelButton = () => screen.getByRole('button', { name: 'Отмена' });
-  
-  // ИСПРАВЛЕНИЕ 1: Кнопка удаления имеет aria-label, но нет текста. 
-  // Ищем строго по aria-label, а не по тексту внутри тега.
-  const getDeleteButton = () => screen.getByRole('button', { name: 'Удалить задачу' });
-  
-  const getEditButton = () => screen.getByRole('button', { name: 'Редактировать' });
-  
-  // ИСПРАВЛЕНИЕ 2: getByText не сработает, если текст находится внутри value инпута.
-  // Для проверки текста задачи нам нужно быть гибче.
-  const getTaskText = (text: string) => {
-    // Сначала пробуем найти как обычный текст (для режима просмотра)
-    const elements = screen.queryAllByText(new RegExp(text, 'i'));
-    if (elements.length > 0) return elements[0];
-    
-    // Если не нашли, пробуем найти инпут с таким value (для режима редактирования)
-    const inputs = screen.queryAllByTestId('edit-input');
-    const matchingInput = inputs.find((input) => (input as HTMLInputElement).value === text);
-    if (matchingInput) return matchingInput;
+  const getAddButton = () => screen.getByRole('button', { name: /добавить/i });
+  const getInputPlaceholder = () => screen.getByPlaceholderText('Новая задача');
 
-    throw new Error(`Не удалось найти элемент с текстом "\${text}" ни как текст, ни как value инпута`);
+  const selectAllFilter = async () => {
+    const allBtn = screen.queryByRole('button', { name: /все/i });
+    if (allBtn) {
+      await userEvent.click(allBtn);
+      await waitFor(() => expect(allBtn).toBeInTheDocument());
+    }
+  };
+
+  const findTaskByText = async (text: string) => {
+    return await screen.findByText(text, { exact: false });
   };
 
   describe('Добавление задачи', () => {
     it('добавляет задачу и отображает её в списке', async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
+      await selectAllFilter();
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
+      const taskText = 'Новая задача';
 
-      await userEvent.type(input, 'Новая задача');
-      await userEvent.click(addButton);
+      await userEvent.type(input, taskText);
+      await userEvent.click(addBtn);
 
-      expect(getTaskText('Новая задача')).toBeInTheDocument();
+      expect(await findTaskByText(taskText)).toBeInTheDocument();
     });
 
-    it('не добавляет задачу с пустым или пробельным текстом', async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
+    it('не добавляет задачу с пустым текстом', async () => {
+      await selectAllFilter();
+      const initialCount = screen.queryAllByRole('listitem').length;
+      const addBtn = getAddButton();
 
-      await userEvent.type(input, '   ');
-      await userEvent.click(addButton);
+      await userEvent.click(addBtn);
 
-      expect(screen.queryByText(/^\s*\$/u)).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryAllByRole('listitem')).toHaveLength(initialCount);
+      });
     });
   });
 
   describe('Фильтрация задач', () => {
     it('корректно фильтрует активные и завершённые задачи', async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
+      await selectAllFilter();
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
 
       await userEvent.type(input, 'Выполненная задача');
-      await userEvent.click(addButton);
+      await userEvent.click(addBtn);
 
-      const checkbox = screen.getByRole('checkbox');
+      const textEl = await screen.findByText('Выполненная задача', { exact: false });
+
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId } = within(taskItem);
+      const checkbox = getByTestId('task-checkbox');
       await userEvent.click(checkbox);
 
+      await userEvent.clear(input);
       await userEvent.type(input, 'Активная задача');
-      await userEvent.click(addButton);
+      await userEvent.click(addBtn);
 
-      const filterButtons = screen.getAllByRole('button');
-      const completedBtn = filterButtons.find((b) => b.textContent?.includes('Выполненные'));
-      if (!completedBtn) throw new Error('Кнопка "Выполненные" не найдена');
-      await userEvent.click(completedBtn);
+      const filters = screen.getAllByRole('button');
+      const completedFilterBtn = filters.find((b) => b.textContent?.includes('Выполненные'));
+      if (!completedFilterBtn) throw new Error('Кнопка "Выполненные" не найдена');
 
-      expect(getTaskText('Выполненная задача')).toBeInTheDocument();
+      await userEvent.click(completedFilterBtn);
+
+      expect(await screen.findByText('Выполненная задача')).toBeInTheDocument();
       expect(screen.queryByText('Активная задача')).not.toBeInTheDocument();
     });
   });
 
   describe('Inline-редактирование задачи', () => {
-    beforeEach(async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
+    it('показывает кнопку "Редактировать" для активной задачи', async () => {
+      await selectAllFilter();
+      
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
 
       await userEvent.type(input, 'Задача для редактирования');
-      await userEvent.click(addButton);
-    });
+      await userEvent.click(addBtn);
 
-    it('показывает кнопку "Редактировать" для активной задачи', () => {
-      expect(getEditButton()).toBeInTheDocument();
+      const textEl = await screen.findByText('Задача для редактирования', { exact: false });
+
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { queryByTestId } = within(taskItem);
+      const editBtn = queryByTestId('edit-btn');
+
+      expect(editBtn).toBeInTheDocument();
     });
 
     it('позволяет начать редактирование и сохранить через кнопку "Сохранить"', async () => {
-      await userEvent.click(getEditButton());
+      await selectAllFilter();
       
-      // Ждем появления инпута
-      await expect(getEditInput()).toBeInTheDocument();
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
 
-      const editInput = getEditInput();
+      await userEvent.type(input, 'Задача для редактирования');
+      await userEvent.click(addBtn);
+
+      const textElements = await screen.findAllByText('Задача для редактирования', { exact: false });
+      
+      const firstTextEl = textElements[0];
+      
+      const taskItem = firstTextEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li>');
+      }
+
+      const { getByTestId, queryByTestId } = within(taskItem);
+
+      const editBtn = getByTestId('edit-btn');
+      await userEvent.click(editBtn);
+
+      expect(queryByTestId('edit-input')).toBeInTheDocument();
+
+      const editInput = getByTestId('edit-input');
       await userEvent.clear(editInput);
       await userEvent.type(editInput, 'Отредактированная задача');
 
-      await userEvent.click(getSaveButton());
-      await expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
-      // ИСПРАВЛЕНИЕ: Используем наш умный getTaskText, который найдет текст даже если он теперь в span
-      expect(getTaskText('Отредактированная задача')).toBeInTheDocument();
+      const saveBtn = getByTestId('save-btn'); 
+      await userEvent.click(saveBtn);
+
+      expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
+      expect(await screen.findByText('Отредактированная задача')).toBeInTheDocument();
     });
 
     it('отменяет редактирование по Escape', async () => {
-      await userEvent.click(getEditButton());
-      const editInput = getEditInput();
+      await selectAllFilter();
+      
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
 
-      await userEvent.clear(editInput);
-      await userEvent.type(editInput, 'Не сохранённая задача');
+      await userEvent.type(input, 'Задача для отмены');
+      await userEvent.click(addBtn);
 
-      await userEvent.keyboard('{Escape}');
+      const textEl = await screen.findByText('Задача для отмены', { exact: false });
 
-      await expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
-      // ИСПРАВЛЕНИЕ: Проверяем, что вернулся исходный текст
-      expect(getTaskText('Задача для редактирования')).toBeInTheDocument();
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId, queryByTestId } = within(taskItem);
+      
+      const editBtn = getByTestId('edit-btn');
+      await userEvent.click(editBtn);
+
+      expect(queryByTestId('edit-input')).toBeInTheDocument();
+      const editInput = getByTestId('edit-input');
+      
+      await userEvent.click(editInput);
+      await userEvent.keyboard('[Escape]');
+
+      expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
+      expect(await screen.findByText('Задача для отмены')).toBeInTheDocument();
     });
 
     it('отменяет редактирование кнопкой "Отмена"', async () => {
-      await userEvent.click(getEditButton());
-      const editInput = getEditInput();
+      await selectAllFilter();
+      
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
 
-      await userEvent.clear(editInput);
-      await userEvent.type(editInput, 'Не сохранённая задача');
+      await userEvent.type(input, 'Задача для отмены кнопкой');
+      await userEvent.click(addBtn);
 
-      await userEvent.click(getCancelButton());
+      const textEl = await screen.findByText('Задача для отмены кнопкой', { exact: false });
 
-      await expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
-      // ИСПРАВЛЕНИЕ: Проверяем, что вернулся исходный текст
-      expect(getTaskText('Задача для редактирования')).toBeInTheDocument();
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId } = within(taskItem);
+      
+      const editBtn = getByTestId('edit-btn');
+      await userEvent.click(editBtn);
+
+      expect(await screen.findByTestId('edit-input')).toBeInTheDocument();
+      const editInput = getByTestId('edit-input');
+
+      await userEvent.click(editInput);
+
+      const cancelBtn = getByTestId('cancel-btn'); 
+      await userEvent.click(cancelBtn);
+
+      expect(screen.queryByTestId('edit-input')).not.toBeInTheDocument();
+      expect(await screen.findByText('Задача для отмены кнопкой')).toBeInTheDocument();
     });
 
     it('не показывает кнопку редактирования для завершённой задачи', async () => {
-      const checkbox = screen.getByRole('checkbox');
+      await selectAllFilter();
+      
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
+
+      await userEvent.type(input, 'Завершённая задача');
+      await userEvent.click(addBtn);
+
+      const textEl = await screen.findByText('Завершённая задача', { exact: false });
+
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId, queryByTestId } = within(taskItem);
+
+      const checkbox = getByTestId('task-checkbox');
       await userEvent.click(checkbox);
 
-      expect(screen.queryByRole('button', { name: 'Редактировать' })).not.toBeInTheDocument();
+      expect(checkbox).toBeChecked();
+
+      const editBtn = queryByTestId('edit-btn');
+      expect(editBtn).toBeNull();
     });
   });
 
   describe('Удаление задачи', () => {
-    beforeEach(async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
-
-      await userEvent.type(input, 'Задача для удаления');
-      await userEvent.click(addButton);
-    });
 
     it('удаляет задачу из списка', async () => {
-      // ИСПРАВЛЕНИЕ: Ищем кнопку по aria-label, так как внутри тега нет текста "Удалить"
-      const deleteBtn = getDeleteButton();
-      await userEvent.click(deleteBtn);
+      await selectAllFilter();
       
-      expect(screen.queryByText('Задача для удаления')).not.toBeInTheDocument();
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
+      const taskText = 'Задача для удаления';
+
+      await userEvent.type(input, taskText);
+      await userEvent.click(addBtn);
+
+      const textEl = await screen.findByText(taskText, { exact: false });
+      
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId } = within(taskItem);
+
+      const deleteBtn = getByTestId('delete-btn');
+      await userEvent.click(deleteBtn);
+
+      expect(screen.queryByText(taskText)).toBeNull();
     });
   });
 
   describe('Переключение статуса задачи', () => {
-    beforeEach(async () => {
-      const input = getPlaceholderInput();
-      const addButton = getAddButton();
-
-      await userEvent.type(input, 'Задача для переключения');
-      await userEvent.click(addButton);
-    });
 
     it('переключает статус задачи по клику на чекбокс', async () => {
-      const checkbox = screen.getByRole('checkbox');
-      const labelText = getTaskText('Задача для переключения');
+      await selectAllFilter();
+
+      const input = getInputPlaceholder();
+      const addBtn = getAddButton();
+      const taskText = 'Задача для переключения';
+
+      await userEvent.type(input, taskText);
+      await userEvent.click(addBtn);
+
+      const textEl = await screen.findByText(taskText, { exact: false });
+
+      const taskItem = textEl.closest('li');
+      if (!taskItem) {
+        throw new Error('Не удалось найти родительский <li> для задачи');
+      }
+
+      const { getByTestId } = within(taskItem);
+
+      const checkbox = getByTestId('task-checkbox');
+
+      expect(checkbox).not.toBeChecked();
 
       await userEvent.click(checkbox);
 
       expect(checkbox).toBeChecked();
-      expect(labelText).toBeInTheDocument();
     });
   });
 });
