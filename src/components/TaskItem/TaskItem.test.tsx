@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TaskItem } from './TaskItem'
-import { vi } from 'vitest' 
+import { vi } from 'vitest'
 import '@testing-library/jest-dom'
 
 const mockCallbacks = {
@@ -23,7 +23,7 @@ const renderTask = (props?: Partial<typeof defaultProps>) => {
 
 afterEach(() => {
   cleanup()
-  vi.clearAllMocks() 
+  vi.clearAllMocks()
 })
 
 describe('TaskItem', () => {
@@ -49,15 +49,14 @@ describe('TaskItem', () => {
 
   it('показывает кнопку редактирования только для активной задачи', () => {
     renderTask({ completed: false })
-    
-    expect(screen.getByTestId('edit-btn')).toBeInTheDocument()
 
-    cleanup()
+    const editBtn = screen.getByLabelText('Редактировать')
+    expect(editBtn).toBeInTheDocument()
   })
 
   it('не показывает кнопку редактирования для завершённой задачи', () => {
     renderTask({ completed: true })
 
-    expect(screen.queryByTestId('edit-btn')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Редактировать')).not.toBeInTheDocument()
   })
 })

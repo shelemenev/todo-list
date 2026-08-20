@@ -12,7 +12,7 @@ describe('TaskForm', () => {
     
     render(<TaskForm onAdd={onAdd} />)
 
-    const input = screen.getByPlaceholderText('Новая задача')
+    const input = screen.getByLabelText('Текст задачи')
     const button = screen.getByRole('button', { name: /Добавить/i })
 
     await user.type(input, 'Купить молоко')
@@ -26,7 +26,7 @@ describe('TaskForm', () => {
     const onAdd = vi.fn()
     render(<TaskForm onAdd={onAdd} />)
 
-    const input = screen.getByPlaceholderText('Новая задача')
+    const input = screen.getByLabelText('Текст задачи')
 
     await user.type(input, 'Задача по Enter')
     await user.keyboard('{Enter}')
@@ -49,7 +49,7 @@ describe('TaskForm', () => {
     const onAdd = vi.fn()
     render(<TaskForm onAdd={onAdd} />)
 
-    const input = screen.getByPlaceholderText('Новая задача')
+    const input = screen.getByLabelText('Текст задачи')
     const button = screen.getByRole('button', { name: /Добавить/i })
 
     await user.type(input, 'Новая задача')
@@ -63,7 +63,7 @@ describe('TaskForm', () => {
     const onAdd = vi.fn()
     render(<TaskForm onAdd={onAdd} />)
 
-    const input = screen.getByPlaceholderText('Новая задача')
+    const input = screen.getByLabelText('Текст задачи')
     const button = screen.getByRole('button', { name: /Добавить/i })
 
     await user.click(button)
