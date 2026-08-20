@@ -28,5 +28,5 @@ export interface FilterButtonsProps {
 }
 
 export interface TaskFormProps {
-  onAddTask: (task: Task) => void
+  onAdd: (text: string) => void;
 }

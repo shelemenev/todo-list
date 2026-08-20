@@ -1,70 +1,74 @@
-import { vi } from 'vitest';         
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'; 
-import { TaskForm } from './TaskForm';
-import '@testing-library/jest-dom';
+import { vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { TaskForm } from './TaskForm'
+import '@testing-library/jest-dom'
 
-const user = userEvent.setup();      
+const user = userEvent.setup()
 
 describe('TaskForm', () => {
-  it('вызывает onAddTask с правильной задачей при клике на кнопку "Добавить"', async () => {
-    const onAddTask = vi.fn();
-    render(<TaskForm onAddTask={onAddTask} />);
-
-    const input = screen.getByPlaceholderText('Новая задача');
-    const button = screen.getByRole('button', { name: /Добавить/i });
-
-    await user.type(input, 'Купить молоко');
-    await user.click(button);
-
-    expect(onAddTask).toHaveBeenCalledTimes(1);
+  it('вызывает onAdd с текстом задачи при клике на кнопку "Добавить"', async () => {
+    const onAdd = vi.fn()
     
-    expect(onAddTask).toHaveBeenCalledWith({
-      id: expect.any(String),
-      text: 'Купить молоко',
-      completed: false,
-    });
-  });
-});
+    render(<TaskForm onAdd={onAdd} />)
 
-it('вызывает onAddTask при нажатии Enter в поле ввода', async () => {
-  const onAddTask = vi.fn();
-  
-  render(<TaskForm onAddTask={onAddTask} />);
+    const input = screen.getByPlaceholderText('Новая задача')
+    const button = screen.getByRole('button', { name: /Добавить/i })
 
-  const input = screen.getByPlaceholderText('Новая задача'); 
+    await user.type(input, 'Купить молоко')
+    await user.click(button)
 
-  await user.type(input, 'Задача по Enter');
-  
-  await user.keyboard('{Enter}');
+    expect(onAdd).toHaveBeenCalledTimes(1)
+    expect(onAdd).toHaveBeenCalledWith('Купить молоко')
+  })
 
-  expect(onAddTask).toHaveBeenCalledTimes(1);
-});
+  it('вызывает onAdd при нажатии Enter в поле ввода', async () => {
+    const onAdd = vi.fn()
+    render(<TaskForm onAdd={onAdd} />)
 
+    const input = screen.getByPlaceholderText('Новая задача')
 
-it('не добавляет задачу при пустом вводе', async () => {
-  const onAddTask = vi.fn(); 
-  render(<TaskForm onAddTask={onAddTask} />);
+    await user.type(input, 'Задача по Enter')
+    await user.keyboard('{Enter}')
 
-  const button = screen.getByRole('button', { name: /Добавить/i });
+    expect(onAdd).toHaveBeenCalledTimes(1)
+  })
 
-  await user.click(button);
+  it('не вызывает onAdd при пустом вводе и клике на кнопку', async () => {
+    const onAdd = vi.fn()
+    render(<TaskForm onAdd={onAdd} />)
 
-  expect(onAddTask).not.toHaveBeenCalled(); 
-});
+    const button = screen.getByRole('button', { name: /Добавить/i })
 
-it('очищает инпут после добавления задачи', async () => {
-  const onAddTask = vi.fn(); 
-  render(<TaskForm onAddTask={onAddTask} />);
+    await user.click(button)
 
-  const input = screen.getByPlaceholderText('Новая задача');
-  const button = screen.getByRole('button', { name: /Добавить/i });
+    expect(onAdd).not.toHaveBeenCalled()
+  })
 
-  await user.type(input, 'Новая задача');
-  await user.click(button);
+  it('очищает инпут после успешного добавления задачи', async () => {
+    const onAdd = vi.fn()
+    render(<TaskForm onAdd={onAdd} />)
 
-  expect(onAddTask).toHaveBeenCalledTimes(1);
+    const input = screen.getByPlaceholderText('Новая задача')
+    const button = screen.getByRole('button', { name: /Добавить/i })
 
-  expect(input).toHaveValue('');
-});
+    await user.type(input, 'Новая задача')
+    await user.click(button)
 
+    expect(onAdd).toHaveBeenCalledTimes(1)
+    expect(input).toHaveValue('')
+  })
+
+  it('не очищает инпут и не вызывает onAdd, если ввод пустой', async () => {
+    const onAdd = vi.fn()
+    render(<TaskForm onAdd={onAdd} />)
+
+    const input = screen.getByPlaceholderText('Новая задача')
+    const button = screen.getByRole('button', { name: /Добавить/i })
+
+    await user.click(button)
+
+    expect(onAdd).not.toHaveBeenCalled()
+    expect(input).toHaveValue('')
+  })
+})

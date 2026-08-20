@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import styles from './TaskItem.module.scss';
-import type { TaskItemProps } from '../../types';
+import React, { useState, useCallback } from 'react'
+import type { TaskItemProps } from '../../types'
+import styles from './TaskItem.module.scss'
 
 export const TaskItem = ({
   id,
@@ -9,44 +9,46 @@ export const TaskItem = ({
   onToggle,
   onDelete,
   onEdit,
-}: TaskItemProps): React.ReactElement => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(text);
+}: TaskItemProps) => { 
+  const [isEditing, setIsEditing] = useState(false)
+  const [inputValue, setInputValue] = useState(text)
 
-  const handleToggle = useCallback(() => onToggle(id), [onToggle, id]);
-  const handleDelete = useCallback(() => onDelete(id), [onDelete, id]);
+  const handleToggle = useCallback(() => onToggle(id), [onToggle, id])
+  const handleDelete = useCallback(() => onDelete(id), [onDelete, id])
 
   const handleSave = useCallback(() => {
-    const trimmed = inputValue.trim();
+    const trimmed = inputValue.trim()
+    
     if (!trimmed) {
-      setInputValue(text);
-      setIsEditing(false);
-      return;
+      setInputValue(text)
+      setIsEditing(false)
+      return
     }
 
-    onEdit?.(id, trimmed);
-    setIsEditing(false);
-  }, [inputValue, text, onEdit, id]);
+    onEdit?.(id, trimmed)
+    
+    setIsEditing(false)
+  }, [inputValue, text, onEdit, id])
 
   const handleCancel = useCallback(() => {
-    setInputValue(text);
-    setIsEditing(false);
-  }, [text]);
+    setInputValue(text)
+    setIsEditing(false)
+  }, [text])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
-        e.preventDefault();
-        handleSave();
+        e.preventDefault()
+        handleSave()
       } else if (e.key === 'Escape') {
-        e.preventDefault();
-        handleCancel();
+        e.preventDefault()
+        handleCancel()
       }
     },
     [handleSave, handleCancel],
-  );
+  )
 
-  const canEdit = !completed && typeof onEdit === 'function';
+  const canEdit = !completed && typeof onEdit === 'function'
 
   return (
     <li className={`${styles.TaskItem} ${completed ? styles.Completed : ''}`}>
@@ -59,19 +61,17 @@ export const TaskItem = ({
           aria-checked={completed}
           role="checkbox"
           tabIndex={0}
-          data-testid="task-checkbox" 
           onChange={handleToggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleToggle();
+              e.preventDefault()
+              handleToggle()
             }
           }}
         />
 
         {canEdit && isEditing ? (
           <input
-            data-testid="edit-input"
             className={styles.EditInput}
             type="text"
             value={inputValue}
@@ -94,7 +94,6 @@ export const TaskItem = ({
                 type="button"
                 onClick={handleSave}
                 aria-label="Сохранить"
-                data-testid="save-btn"
               >
                 Сохранить
               </button>
@@ -103,7 +102,6 @@ export const TaskItem = ({
                 type="button"
                 onClick={handleCancel}
                 aria-label="Отмена"
-                data-testid="cancel-btn"
               >
                 Отмена
               </button>
@@ -117,7 +115,6 @@ export const TaskItem = ({
                 setIsEditing(true);
               }}
               aria-label="Редактировать"
-              data-testid="edit-btn" 
             >
               Редактировать
             </button>
@@ -130,10 +127,9 @@ export const TaskItem = ({
         type="button"
         onClick={handleDelete}
         aria-label="Удалить задачу"
-        data-testid="delete-btn" 
       >
         Удалить
       </button>
     </li>
-  );
-};
+  )
+}

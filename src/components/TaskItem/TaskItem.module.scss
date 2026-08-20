@@ -3,25 +3,25 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px;
-  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  border-bottom: 1px solid var(--border-color);
   gap: 12px;
 
   &:last-child {
     border-bottom: none;
   }
+}
 
-  &.Completed {
-    background-color: #f9f9f9;
-    color: #888;
+.Completed {
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
 
-    .Text {
-      text-decoration: line-through;
-    }
+  .Text {
+    text-decoration: line-through;
+  }
 
-    .ActionButtons,
-    .EditButton {
-      display: none;
-    }
+  .ActionButtons,
+  .EditButton {
+    display: none;
   }
 }
 
@@ -31,15 +31,14 @@
   gap: 8px;
   flex: 1;
   user-select: none;
-  min-width: 0; 
+  min-width: 0;
 }
 
 .Checkbox {
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: var(--primary, #3b82f6);
-  -webkit-appearance: checkbox;
+  accent-color: var(--primary);
   appearance: checkbox;
 }
 
@@ -51,6 +50,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text-primary);
 }
 
 .EditInput {
@@ -58,20 +58,20 @@
   padding: 6px 8px;
   font-size: 16px;
   font-family: inherit;
-  border: 1px solid var(--border-color, #d1d5db);
-  border-radius: var(--size-radius-2, 6px);
-  background-color: #fff;
-  color: #111;
-  outline: 2px solid var(--primary, #3b82f6);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  outline: 2px solid var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 143, 255, 0.2);
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #9ca3af;
+    border-color: transparent;
   }
 
   &:focus {
-    border-color: var(--primary, #3b82f6);
+    border-color: var(--primary);
     outline: none;
   }
 }
@@ -85,16 +85,16 @@
   padding: 4px 8px;
   font-size: 13px;
   background: transparent;
-  border: 1px solid var(--border-color, #ccc);
-  color: #333;
-  border-radius: var(--size-radius-2, 4px);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--size-radius-2);
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background-color: #f3f4f6;
-    border-color: #9ca3af;
-    color: #000;
+    background-color: var(--active-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
   }
 }
 
@@ -102,39 +102,39 @@
 .CancelButton {
   padding: 4px 10px;
   font-size: 13px;
-  border-radius: var(--size-radius-2, 4px);
+  border-radius: var(--size-radius-2);
   cursor: pointer;
   border: none;
   font-weight: 500;
 }
 
 .SaveButton {
-  background-color: #10b981; 
+  background-color: var(--success);
   color: white;
 
   &:hover {
-    background-color: #059669;
+    background-color: var(--success-hover);
   }
 }
 
 .CancelButton {
-  background-color: #6b7280;
+  background-color: var(--neutral);
   color: white;
 
   &:hover {
-    background-color: #4b5563;
+    background-color: var(--neutral-hover);
   }
 }
 
 .DeleteButton {
   padding: 4px 8px;
   background: transparent;
-  border: 1px solid var(--border-color, #ccc);
-  border-radius: var(--size-radius-2, 6px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
   cursor: pointer;
-  color: #d9534f;
+  color: var(--danger);
 
   &:hover {
-    background-color: #ffe6e6;
+    background-color: rgba(255, 107, 107, 0.1);
   }
 }

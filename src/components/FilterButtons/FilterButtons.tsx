@@ -1,27 +1,31 @@
-import React from 'react'
 import styles from './FilterButtons.module.scss'
 import type { FilterButtonsProps, TaskStatus } from '../../types'
 
-const FILTER_BUTTONS: ReadonlyArray<{ key: TaskStatus; label: string }> = [
-  { key: 'all', label: 'Все' },
-  { key: 'active', label: 'Активные' },
-  { key: 'completed', label: 'Выполненные' },
-]
+export const FilterButtons = ({ status, onStatusChange }: FilterButtonsProps) => {
+  const filters: TaskStatus[] = ['all', 'active', 'completed']
 
-export const FilterButtons = ({
-  status,
-  onStatusChange,
-}: FilterButtonsProps): React.ReactElement => {
   return (
     <div className={styles.FilterButtons}>
-      {FILTER_BUTTONS.map((btn) => (
+      {filters.map((filter) => (
         <button
-          key={btn.key}
-          className={`${styles.Button} ${status === btn.key ? styles.Active : ''}`}
+          key={filter}
           type="button"
-          onClick={() => onStatusChange(btn.key)}
+          className={status === filter ? styles.Active : styles.Button}
+          onClick={() => onStatusChange(filter)}
+          aria-pressed={status === filter}
+          aria-label={
+            filter === 'all'
+              ? 'Показать все задачи'
+              : filter === 'active'
+              ? 'Показать активные задачи'
+              : 'Показать завершённые задачи'
+          }
         >
-          {btn.label}
+          {filter === 'all'
+            ? 'Все'
+            : filter === 'active'
+            ? 'Активные'
+            : 'Завершённые'}
         </button>
       ))}
     </div>

@@ -23,7 +23,7 @@ export const TaskList = React.memo(({
           completed={task.completed}
           onToggle={onToggle}
           onDelete={onDelete}
-          onEdit={onEdit}
+          onEdit={onEdit} 
         />
       ))}
     </ul>

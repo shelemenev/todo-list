@@ -1,37 +1,35 @@
 import React, { useState } from 'react'
+import type { TaskFormProps } from '../../types'
 import styles from './TaskForm.module.scss'
-import type { Task, TaskFormProps } from '../../types'
 
-export const TaskForm = ({
-  onAddTask,
-}: TaskFormProps): React.ReactElement => {
-  const [text, setText] = useState('')
+export const TaskForm = ({ onAdd }: TaskFormProps) => {
+  const [value, setValue] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!text.trim()) return
+    if (!value.trim()) return
+    onAdd(value.trim())
+    setValue('')
+  }
 
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      text,
-      completed: false,
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e)
     }
-
-    onAddTask(newTask)
-    setText('')
   }
 
   return (
-    <form className={styles.TaskForm} onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.TaskForm}>
       <input
         className={styles.Input}
         type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Новая задача"
-        autoComplete="off"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Новая задача…"
+        aria-label="Текст задачи"
       />
-      <button className={styles.SubmitButton} type="submit">
+      <button type="submit" className={styles.SubmitButton}>
         Добавить
       </button>
     </form>
