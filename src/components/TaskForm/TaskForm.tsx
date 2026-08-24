@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import type { TaskFormProps } from '../../types'
 import styles from './TaskForm.module.scss'
 

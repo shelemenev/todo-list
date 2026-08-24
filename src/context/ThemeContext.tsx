@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 export interface ThemeContextType {
   theme: 'light' | 'dark'
@@ -9,37 +9,35 @@ export interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
     const saved = localStorage.getItem('app-theme')
     if (saved === 'light' || saved === 'dark') {
-      return saved
+      setTheme(saved)
     }
-    return 'light'
-  })
+  }, [])
 
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
     document.body.classList.toggle('theme-dark', theme === 'dark')
-  }
+  }, [theme])
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('app-theme', newTheme)
-    document.body.classList.toggle('theme-dark', newTheme === 'dark')
+    updateTheme(newTheme)
   }
 
-  const setThemeInternal = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme)
+  const updateTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
     localStorage.setItem('app-theme', newTheme)
-    document.body.classList.toggle('theme-dark', newTheme === 'dark')
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: setThemeInternal }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: updateTheme }}>
       {children}
     </ThemeContext.Provider>
-  )
-}
+  );
+};
 
 export const useTheme = () => {
   const context = useContext(ThemeContext)

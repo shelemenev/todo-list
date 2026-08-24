@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { TaskItemProps } from '../../types'
 import styles from './TaskItem.module.scss'
 
@@ -9,7 +9,7 @@ export const TaskItem = ({
   onToggle,
   onDelete,
   onEdit,
-}: TaskItemProps) => { 
+}: TaskItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
   const [inputValue, setInputValue] = useState(text)
 
@@ -18,7 +18,7 @@ export const TaskItem = ({
 
   const handleSave = useCallback(() => {
     const trimmed = inputValue.trim()
-    
+
     if (!trimmed) {
       setInputValue(text)
       setIsEditing(false)
@@ -26,7 +26,7 @@ export const TaskItem = ({
     }
 
     onEdit?.(id, trimmed)
-    
+
     setIsEditing(false)
   }, [inputValue, text, onEdit, id])
 
@@ -64,8 +64,8 @@ export const TaskItem = ({
           onChange={handleToggle}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              handleToggle()
+              e.preventDefault();
+              handleToggle();
             }
           }}
         />

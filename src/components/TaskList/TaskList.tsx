@@ -1,9 +1,9 @@
-import React from 'react'
+import { memo } from 'react'
 import { TaskItem } from '../TaskItem/TaskItem'
 import styles from './TaskList.module.scss'
 import type { TaskListProps } from '../../types'
 
-export const TaskList = React.memo(({
+export const TaskList = memo(({
   tasks,
   onToggle,
   onDelete,
@@ -23,7 +23,7 @@ export const TaskList = React.memo(({
           completed={task.completed}
           onToggle={onToggle}
           onDelete={onDelete}
-          onEdit={onEdit} 
+          onEdit={onEdit}
         />
       ))}
     </ul>
