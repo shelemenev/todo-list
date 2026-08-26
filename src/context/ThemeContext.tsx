@@ -22,22 +22,22 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     document.body.classList.toggle('theme-dark', theme === 'dark')
   }, [theme])
 
+  const updateTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme)
+    localStorage.setItem('app-theme', newTheme)
+  }
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     updateTheme(newTheme)
-  }
-
-  const updateTheme = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
-    localStorage.setItem('app-theme', newTheme)
   }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: updateTheme }}>
       {children}
     </ThemeContext.Provider>
-  );
-};
+  )
+}
 
 export const useTheme = () => {
   const context = useContext(ThemeContext)
