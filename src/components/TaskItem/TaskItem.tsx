@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import type { TaskItemProps } from '../../types'
 import styles from './TaskItem.module.scss'
+import type { KeyboardEvent } from 'react'
 
 export const TaskItem = ({
   id,
@@ -35,8 +36,18 @@ export const TaskItem = ({
     setIsEditing(false)
   }, [text])
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
+  const handleKeyDownCheckbox = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        handleToggle()
+      }
+    },
+    [handleToggle],
+  )
+
+  const handleKeyDownEditInput = useCallback(
+    (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault()
         handleSave()
@@ -47,6 +58,11 @@ export const TaskItem = ({
     },
     [handleSave, handleCancel],
   )
+
+  const handleEditClick = useCallback(() => {
+    setInputValue(text)
+    setIsEditing(true)
+  }, [text])
 
   const canEdit = !completed && typeof onEdit === 'function'
 
@@ -62,12 +78,7 @@ export const TaskItem = ({
           role="checkbox"
           tabIndex={0}
           onChange={handleToggle}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleToggle();
-            }
-          }}
+          onKeyDown={handleKeyDownCheckbox}
         />
 
         {canEdit && isEditing ? (
@@ -76,7 +87,7 @@ export const TaskItem = ({
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={handleKeyDownEditInput}
             autoFocus
             aria-label="Редактировать задачу"
           />
@@ -110,10 +121,7 @@ export const TaskItem = ({
             <button
               className={styles.EditButton}
               type="button"
-              onClick={() => {
-                setInputValue(text);
-                setIsEditing(true);
-              }}
+              onClick={handleEditClick}
               aria-label="Редактировать"
             >
               Редактировать

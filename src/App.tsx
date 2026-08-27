@@ -4,11 +4,12 @@ import { TaskForm } from './components/TaskForm/TaskForm'
 import { TaskList } from './components/TaskList/TaskList'
 import { FilterButtons } from './components/FilterButtons/FilterButtons'
 import { ThemeToggleButton } from './components/ThemeToggle/ThemeToggleButton'
+import type { ReactElement } from 'react'
 
 const TASKS_KEY = 'todo-tasks'
 const FILTER_KEY = 'todo-filter'
 
-export const App = (): React.ReactElement => {
+export const App = (): ReactElement => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     const stored = localStorage.getItem(TASKS_KEY)
     if (!stored) return []
@@ -39,13 +40,13 @@ export const App = (): React.ReactElement => {
   }, [status])
 
   const addTask = useCallback((text: string) => {
-    if (!text.trim()) return
+    if (!text.trim()) return;
     const newTask: Task = {
       id: crypto.randomUUID(),
       text: text.trim(),
       completed: false,
     }
-    setTasks((prev) => [newTask, ...prev])
+    setTasks((prev) => [newTask, ...prev]);
   }, [])
 
   const toggleTask = useCallback((id: string) => {
@@ -64,7 +65,7 @@ export const App = (): React.ReactElement => {
       prev.map((t) =>
         t.id === id ? { ...t, text: newText.trim() } : t
       )
-    );
+    )
   }, [])
 
   const filteredTasks = useMemo<Task[]>(() => {
@@ -80,7 +81,7 @@ export const App = (): React.ReactElement => {
       <ThemeToggleButton />
 
       <TaskForm onAdd={addTask} />
-      
+
       <FilterButtons status={status} onStatusChange={setStatus} />
 
       <TaskList

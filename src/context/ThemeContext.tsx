@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
 
 export interface ThemeContextType {
   theme: 'light' | 'dark'
@@ -8,28 +9,30 @@ export interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+interface ThemeProviderProps {
+  children: ReactNode
+}
 
-  useEffect(() => {
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('app-theme')
     if (saved === 'light' || saved === 'dark') {
-      setTheme(saved)
+      return saved
     }
-  }, [])
+    return 'light'
+  })
 
   useEffect(() => {
-    document.body.classList.toggle('theme-dark', theme === 'dark')
+    document.body.classList.toggle('theme-dark', theme === 'dark');
   }, [theme])
 
   const updateTheme = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme)
+    setTheme(newTheme);
     localStorage.setItem('app-theme', newTheme)
   }
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    updateTheme(newTheme)
+    updateTheme(theme === 'light' ? 'dark' : 'light')
   }
 
   return (
