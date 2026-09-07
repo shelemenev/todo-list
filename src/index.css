@@ -1,0 +1,61 @@
+:root {
+  --btn-gap: 8px;
+  --border-color: #ccc;
+  --active-bg: #f0f0f0;
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --size-radius-2: 4px;
+
+  --bg-body: #f9f9f9;
+  --bg-card: #ffffff;
+  --text-primary: #333;
+  --text-secondary: #888;
+  --input-bg: #ffffff;
+
+  --danger: #d9534f;
+  --success: #10b981;
+  --success-hover: #059669;
+  --neutral: #6b7280;
+  --neutral-hover: #4b5563;
+}
+
+body.theme-dark {
+  --bg-body: #1e1e1e;
+  --bg-card: #2c2c2c;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaa;
+  --border-color: #444;
+  --active-bg: #3a3a3a;
+  --input-bg: #383838;
+
+  --primary: #4f8fff;
+  --primary-hover: #376bbf;
+
+  --danger: #ff6b6b;
+  --success: #3dd58e;
+  --success-hover: #2b9d68;
+  --neutral: #9ca3af;
+  --neutral-hover: #6b7280;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: var(--size-radius-2);
+}
+
+.app-title {
+  margin-top: 0;
+  text-align: center;
+  color: var(--text-primary);
+}

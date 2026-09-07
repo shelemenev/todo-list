@@ -1,0 +1,140 @@
+.TaskItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-color);
+  gap: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.Completed {
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+
+  .Text {
+    text-decoration: line-through;
+  }
+
+  .ActionButtons,
+  .EditButton {
+    display: none;
+  }
+}
+
+.Label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  user-select: none;
+  min-width: 0;
+}
+
+.Checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  appearance: checkbox;
+}
+
+.Text {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.EditInput {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  outline: 2px solid var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 143, 255, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: transparent;
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    outline: none;
+  }
+}
+
+.ActionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.EditButton {
+  padding: 4px 8px;
+  font-size: 13px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--active-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+}
+
+.SaveButton,
+.CancelButton {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.SaveButton {
+  background-color: var(--success);
+  color: white;
+
+  &:hover {
+    background-color: var(--success-hover);
+  }
+}
+
+.CancelButton {
+  background-color: var(--neutral);
+  color: white;
+
+  &:hover {
+    background-color: var(--neutral-hover);
+  }
+}
+
+.DeleteButton {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--size-radius-2);
+  cursor: pointer;
+  color: var(--danger);
+
+  &:hover {
+    background-color: rgba(255, 107, 107, 0.1);
+  }
+}
