@@ -23,11 +23,11 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   })
 
   useEffect(() => {
-    document.body.classList.toggle('theme-dark', theme === 'dark');
+    document.body.classList.toggle('theme-dark', theme === 'dark')
   }, [theme])
 
   const updateTheme = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
+    setTheme(newTheme)
     localStorage.setItem('app-theme', newTheme)
   }
 

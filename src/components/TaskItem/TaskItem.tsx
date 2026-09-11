@@ -64,6 +64,13 @@ export const TaskItem = ({
     setIsEditing(true)
   }, [text])
 
+  const handleChangeEditInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value)
+    },
+    [],
+  )
+
   const canEdit = !completed && typeof onEdit === 'function'
 
   return (
@@ -86,7 +93,7 @@ export const TaskItem = ({
             className={styles.EditInput}
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleChangeEditInput}
             onKeyDown={handleKeyDownEditInput}
             autoFocus
             aria-label="Редактировать задачу"
