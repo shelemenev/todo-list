@@ -19,8 +19,13 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      'react-refresh/only-export-components': ['off', 
-      { allowConstantExport: true }],
-    }
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    },
+  },
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
   },
 ])

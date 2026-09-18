@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
+import type { ChangeEvent, KeyboardEvent } from 'react'
 import type { TaskItemProps } from '../../types'
 import styles from './TaskItem.module.scss'
-import type { KeyboardEvent } from 'react'
 
 export const TaskItem = ({
   id,
@@ -65,7 +65,7 @@ export const TaskItem = ({
   }, [text])
 
   const handleChangeEditInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.target.value)
     },
     [],

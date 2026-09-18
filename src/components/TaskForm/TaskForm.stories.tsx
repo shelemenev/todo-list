@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, type FC } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskForm } from './TaskForm'
 
@@ -25,10 +25,10 @@ export default meta
 
 type Story = StoryObj<typeof TaskForm>
 
-const TaskFormStory: React.FC<{ onAdd?: (text: string) => void }> = ({
+const TaskFormStory: FC<{ onAdd?: (text: string) => void }> = ({
   onAdd,
 }) => {
-  const [tasks, setTasks] = React.useState<string[]>([])
+  const [tasks, setTasks] = useState<string[]>([])
 
   const handleAdd = (text: string) => {
     setTasks((prev) => [...prev, text])

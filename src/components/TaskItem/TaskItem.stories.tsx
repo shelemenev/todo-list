@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, type FC } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskItem } from './TaskItem'
 
@@ -70,7 +70,7 @@ export default meta
 
 type Story = StoryObj<typeof TaskItem>
 
-const TaskItemStory: React.FC<{
+const TaskItemStory: FC<{
   id?: string
   text?: string
   completed?: boolean
@@ -85,8 +85,8 @@ const TaskItemStory: React.FC<{
   onDelete,
   onEdit,
 }) => {
-  const [completed, setCompleted] = React.useState(initialCompleted)
-  const [text, setText] = React.useState(initialText)
+  const [completed, setCompleted] = useState(initialCompleted)
+  const [text, setText] = useState(initialText)
 
   const handleToggle = (id: string) => {
     setCompleted((prev) => !prev)

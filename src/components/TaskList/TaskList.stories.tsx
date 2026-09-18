@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, type FC } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { TaskList } from './TaskList'
 
@@ -62,13 +62,13 @@ export default meta
 
 type Story = StoryObj<typeof TaskList>
 
-const TaskListStory: React.FC<{
+const TaskListStory: FC<{
   tasks?: Task[]
   onToggle?: (id: string) => void
   onDelete?: (id: string) => void
   onEdit?: (id: string, text: string) => void
 }> = ({ tasks: initialTasks, onToggle, onDelete, onEdit }) => {
-  const [tasks, setTasks] = React.useState<Task[]>(initialTasks ?? [])
+  const [tasks, setTasks] = useState<Task[]>(initialTasks ?? [])
 
   const handleToggle = (id: string) => {
     setTasks((prev) =>

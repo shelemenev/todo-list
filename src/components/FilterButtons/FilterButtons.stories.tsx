@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, type FC } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { FilterButtons } from './FilterButtons'
 import type { TaskStatus } from '../../types'
@@ -37,11 +37,11 @@ export default meta
 
 type Story = StoryObj<typeof FilterButtons>
 
-const FilterButtonsStory: React.FC<{
+const FilterButtonsStory: FC<{
   status?: TaskStatus
   onStatusChange?: (status: TaskStatus) => void
 }> = ({ status: initialStatus = 'all', onStatusChange }) => {
-  const [status, setStatus] = React.useState<TaskStatus>(initialStatus)
+  const [status, setStatus] = useState<TaskStatus>(initialStatus)
 
   const handleStatusChange = (newStatus: TaskStatus) => {
     setStatus(newStatus)

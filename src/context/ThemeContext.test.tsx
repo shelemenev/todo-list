@@ -1,9 +1,10 @@
 import { vi, expect, it, describe, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { ReactNode } from 'react'
 import { ThemeProvider, useTheme } from './ThemeContext'
 
-const renderWithThemeProvider = (children: React.ReactNode) =>
+const renderWithThemeProvider = (children: ReactNode) =>
   render(<ThemeProvider>{children}</ThemeProvider>)
 
 describe('ThemeProvider', () => {

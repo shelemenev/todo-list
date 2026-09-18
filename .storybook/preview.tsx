@@ -1,5 +1,7 @@
-import type { Preview } from '@storybook/react-webpack5'
+/// <reference types="vite/client" />
+import type { Preview } from '@storybook/react-vite'
 import { useLayoutEffect } from 'react'
+import '../src/index.css'
 
 const preview: Preview = {
   parameters: {
@@ -30,19 +32,10 @@ const preview: Preview = {
 
       useLayoutEffect(() => {
         document.body.classList.toggle('theme-dark', theme === 'dark')
-        document.body.style.backgroundColor = theme === 'dark' ? '#1e1e1e' : '#f9f9f9'
       }, [theme])
 
       return (
-        <div
-          className={theme === 'dark' ? 'theme-dark' : ''}
-          style={{
-            backgroundColor: theme === 'dark' ? '#1e1e1e' : '#f9f9f9',
-            color: theme === 'dark' ? '#e0e0e0' : '#333',
-            minHeight: '100%',
-            padding: '16px',
-          }}
-        >
+        <div className={theme === 'dark' ? 'theme-dark' : ''}>
           <Story />
         </div>
       )
