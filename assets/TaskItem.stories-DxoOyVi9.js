@@ -1,0 +1,16 @@
+import{n as e}from"./rolldown-runtime-DkW27tQK.js";import{n as t,p as n}from"./iframe-C4HVBcRR.js";import{n as r,t as i}from"./TaskItem-D4VQ6t8W.js";var a,o,s,c,l,u,d,f;function p(){return(p=e((()=>{a=n(),r(),o=t(),s={title:`Components/TaskItem`,component:i,tags:[`autodocs`],argTypes:{id:{description:`Уникальный идентификатор задачи. Используется как ключ и для привязки чекбокса к лейблу`,table:{category:`Данные`,type:{summary:`string`}}},text:{description:`Текст задачи, отображаемый в списке`,control:`text`,table:{category:`Данные`,type:{summary:`string`}}},completed:{description:`Статус завершённости. Если true — текст перечёркнут, кнопка редактирования скрыта`,control:`boolean`,table:{category:`Данные`,type:{summary:`boolean`},defaultValue:{summary:`false`}}},onToggle:{description:`Колбэк переключения статуса задачи. Получает id задачи`,table:{category:`Колбэки`,type:{summary:`(id: string) => void`}},action:`onToggle`},onDelete:{description:`Колбэк удаления задачи. Получает id задачи`,table:{category:`Колбэки`,type:{summary:`(id: string) => void`}},action:`onDelete`},onEdit:{description:`Колбэк редактирования текста задачи. Если не передан — кнопка «Редактировать» не отображается`,table:{category:`Колбэки`,type:{summary:`((id: string, text: string) => void) | undefined`}},action:`onEdit`}},args:{id:`task-1`,text:`Купить хлеб`,completed:!1,onToggle:e=>console.log(`onToggle:`,e),onDelete:e=>console.log(`onDelete:`,e),onEdit:(e,t)=>console.log(`onEdit:`,e,t)}},c=({id:e=`task-1`,text:t=`Купить хлеб`,completed:n=!1,onToggle:r,onDelete:s,onEdit:c})=>{let[l,u]=(0,a.useState)(n),[d,f]=(0,a.useState)(t);return(0,o.jsxs)(`div`,{style:{maxWidth:`600px`,padding:`20px`},children:[(0,o.jsx)(`ul`,{style:{listStyle:`none`,padding:0},children:(0,o.jsx)(i,{id:e,text:d,completed:l,onToggle:e=>{u(e=>!e),r?.(e)},onDelete:e=>{s?.(e)},onEdit:(e,t)=>{f(t),c?.(e,t)}})}),(0,o.jsxs)(`p`,{style:{marginTop:`16px`,color:`var(--text-secondary)`},children:[`Статус: `,(0,o.jsx)(`strong`,{children:l?`Завершена`:`Активна`}),` | Текст: `,(0,o.jsx)(`strong`,{children:d})]})]})},l={render:e=>(0,o.jsx)(c,{...e})},u={args:{text:`Выучить TypeScript`,completed:!0},render:e=>(0,o.jsx)(c,{...e})},d={args:{text:`Без редактирования`,completed:!1,onEdit:void 0},render:e=>(0,o.jsx)(c,{...e})},f=[`Default`,`Completed`,`WithoutOnEdit`],l.parameters={...l.parameters,docs:{...l.parameters?.docs,source:{originalSource:`{
+  render: args => <TaskItemStory {...args} />
+}`,...l.parameters?.docs?.source}}},u.parameters={...u.parameters,docs:{...u.parameters?.docs,source:{originalSource:`{
+  args: {
+    text: 'Выучить TypeScript',
+    completed: true
+  },
+  render: args => <TaskItemStory {...args} />
+}`,...u.parameters?.docs?.source}}},d.parameters={...d.parameters,docs:{...d.parameters?.docs,source:{originalSource:`{
+  args: {
+    text: 'Без редактирования',
+    completed: false,
+    onEdit: undefined
+  },
+  render: args => <TaskItemStory {...args} />
+}`,...d.parameters?.docs?.source}}}})))()}p();export{u as Completed,l as Default,d as WithoutOnEdit,f as __namedExportsOrder,s as default};
